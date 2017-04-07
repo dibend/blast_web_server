@@ -1,0 +1,29 @@
+{
+  "name": "blast_web_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "compression": "^1.6.2",
+    "express": "^4.15.2",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dibend/blast_web_server.git"
+  },
+  "author": "David DiBenedetto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dibend/blast_web_server/issues"
+  },
+  "homepage": "https://github.com/dibend/blast_web_server#readme"
+}
