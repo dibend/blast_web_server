@@ -26,5 +26,10 @@ app.get('/trade', function(request, response) {
     response.sendFile(path.join(__dirname+'/public/trade.html'));
 });
 
+app.get('*', function(request, response) {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+});
+
 http.createServer(app).listen(8080);
 https.createServer(creds, app).listen(8443);

@@ -65,6 +65,9 @@
                     <li>
                         <a class="page-scroll" href="index.html#contact">Contact</a>
                     </li>
+                    <li>
+                        <a href="trade.html">Trade</a>
+                    </li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -78,12 +81,8 @@
                 <div class="col-sm-7">
                     <div class="header-content">
                         <div class="header-content-inner">
-                            <div class="input-group">
-                                <h1>Trade immedietly when you get stock or currency alerts with Blast Notifications and Trade&nbsp;It!</h1>
-                                <tradeit id="trade" onmouseover="preTrade()" stock-symbol="AMZN" style="margin:auto;font-size:14px;color:#BC2E52;background:rgba(255,255,255,0.9);" class="btn btn-outline btn-xl" widget="trade-icon">Trade Now!&ensp;</tradeit><br/><br/>
-                                <div style="font-size:18px">Enter Stock Symbol:</div>
-                                <input style="text-transform:uppercase;font-size:18px;color:#BC2E52;text-align:center;font-weight:bold" id="ticker" value="AMZN" class="input-sm">
-                            </div>
+                            <h1>404 - Page Not Found</h1>
+                            <a href="index.html" class="btn btn-outline btn-xl page-scroll">Go To Homepage</a>
                         </div>
                     </div>
                 </div>
@@ -95,6 +94,8 @@
             </div>
         </div>
     </header>
+
+    
 
     <footer>
         <div class="container">
@@ -112,22 +113,6 @@
         </div>
     </footer>
 
-    <script>
-    function preTrade() {
-        $('tradeit').attr('stock-symbol', $('#ticker').val());
-        $('tradeit').attr('timestamp', new Date());
-    }
-    </script>
-
-    <!-- trade.it -->
-    <script type="text/javascript">
-    (function(t,r,a,d,e,it){
-    r.createElement(d); t[d+'Pub'] = e;
-    it=r.createElement(a);d=r.getElementsByTagName(a)[0];
-    it.src='https://www.tradingticket.com/widget/scripts/tradeit-inject.js?pub='+e;
-    d.parentNode.insertBefore(it,d);
-    }(window,document,'script','tradeit','blastnotifications'));
-    </script>
 
     <!-- jQuery -->
     <script src="lib/jquery/jquery.min.js"></script>
@@ -144,3 +129,4 @@
 </body>
 
 </html>
+
