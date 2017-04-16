@@ -6,12 +6,13 @@ var compression = require('compression');
 var bodyParser = require('body-parser');
 var path = require('path');
 var crypto = require('crypto');
-var validator = require('email-validator');
+var emailValidator = require('email-validator');
 var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
+var mysql = require('mysql');
 var config = require('./config');
 
-var transport = nodemailer.createTransport(smtpTransport({
+var mailer = nodemailer.createTransport(smtpTransport({
   host: config.ses_host,
   secureConnection: true,
   port: 465,
@@ -20,6 +21,14 @@ var transport = nodemailer.createTransport(smtpTransport({
     pass: config.ses_pass
   }
 }));
+
+var db = mysql.createConnection({
+  host: config.mysql_host,
+  user: config.mysql_user,
+  password: config.mysql_pass,
+  database: config.mysql_db
+});
+
 
 var sslKey = fs.readFileSync('letsencrypt/privkey.pem', 'utf8');
 var sslCert = fs.readFileSync('letsencrypt/cert.pem', 'utf8');
@@ -44,10 +53,9 @@ app.get('/trade', function(request, response) {
 });
 
 var confirmEmailQuery = {};
-app.post('/signup', function(request, response) {
-  console.log(request.body);
+app.post('/signup_ws', function(request, response) {
   var email = request.body.email;
-  if (validator.validate(email)) {
+  if (emailValidator.validate(email)) {
     var secret = crypto.randomBytes(64).toString('hex'); 
     confirmEmailQuery[secret] = email;
     
@@ -58,24 +66,31 @@ app.post('/signup', function(request, response) {
       text: 'Visit https://blastnotifications.com/confirm?secret=' + secret + ' to verify your subscription!'
     };
 
-    transport.sendMail(mailOptions, function(err, res) {
+    mailer.sendMail(mailOptions, function(err, res) {
       if(err) {
         console.log(err);
       }
-      transport.close();
+      mailer.close();
     });
+    console.log(email + ' confirmation sent');
 
-    console.log(confirmEmailQuery);
+    response.send('check inbox for confirmation email');
+  } else {
+    response.send('invalid');
   }
-  response.send('check inbox for confirmation email');
 });
 
-app.get('/confirm', function(request, response) {
+app.get('/confirm_ws', function(request, response) {
   var secret = request.query.secret;
   if(secret in confirmEmailQuery) {
     var email = confirmEmailQuery[secret]; 
-    console.log(email);
+    db.connect();
+    db.query('INSERT IGNORE INTO worldstar SET ?', {email: email}, function (error) {
+      if (error) throw error;
+    });
+    db.end()
     response.send(email + ' confirmed');
+    console.log(email + ' confirmed');
     delete confirmEmailQuery[secret]; 
   } else {
     response.send('invalid');
