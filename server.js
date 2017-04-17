@@ -3,7 +3,6 @@ var express = require('express');
 var http = require('http');
 var https = require('https');
 var compression = require('compression');
-var bodyParser = require('body-parser');
 var path = require('path');
 var crypto = require('crypto');
 var emailValidator = require('email-validator');
@@ -29,7 +28,6 @@ var db = mysql.createConnection({
   database: config.mysql_db
 });
 
-
 var sslKey = fs.readFileSync('letsencrypt/privkey.pem', 'utf8');
 var sslCert = fs.readFileSync('letsencrypt/cert.pem', 'utf8');
 var ca = [
@@ -45,7 +43,6 @@ var creds = {
 
 var app = express();
 app.use(compression());
-app.use(bodyParser.json());
 app.use(express.static('public'));
 
 app.get('/trade', function(request, response) {
@@ -53,8 +50,8 @@ app.get('/trade', function(request, response) {
 });
 
 var confirmEmailQuery = {};
-app.post('/signup_ws', function(request, response) {
-  var email = request.body.email;
+app.get('/signup_ws', function(request, response) {
+  var email = request.query.email;
   if (emailValidator.validate(email)) {
     var secret = crypto.randomBytes(64).toString('hex'); 
     confirmEmailQuery[secret] = email;
@@ -62,8 +59,8 @@ app.post('/signup_ws', function(request, response) {
     var mailOptions = {
       from: 'Blast Notifications <blasts@blastnotifications.com>',
       to: email,
-      subject: 'Confirm Blast Notification',
-      text: 'Visit https://blastnotifications.com/confirm?secret=' + secret + ' to verify your subscription!'
+      subject: 'Confirm Worldstar Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_ws?secret=' + secret + ' to verify your subscription!'
     };
 
     mailer.sendMail(mailOptions, function(err, res) {
@@ -76,7 +73,8 @@ app.post('/signup_ws', function(request, response) {
 
     response.send('check inbox for confirmation email');
   } else {
-    response.send('invalid');
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
   }
 });
 
@@ -93,7 +91,8 @@ app.get('/confirm_ws', function(request, response) {
     console.log(email + ' confirmed');
     delete confirmEmailQuery[secret]; 
   } else {
-    response.send('invalid');
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
   } 
 });
 
