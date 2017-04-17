@@ -141,6 +141,98 @@ app.get('/confirm_bloomberg_stock', function(request, response) {
   } 
 });
 
+var bloomberg_currency_confirmEmailQuery = {};
+app.get('/signup_bloomberg_currency', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex'); 
+    bloomberg_currency_confirmEmailQuery[secret] = email;
+    
+    var mailOptions = {
+      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      to: email,
+      subject: 'Confirm Bloomberg Currency Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_bloomberg_currency?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_bloomberg_currency', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in bloomberg_currency_confirmEmailQuery) {
+    var email = bloomberg_currency_confirmEmailQuery[secret]; 
+    db.connect();
+    db.query('INSERT IGNORE INTO bloomberg_currency SET ?', {email: email}, function (error) {
+      if (error) throw error;
+    });
+    db.end()
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete bloomberg_currency_confirmEmailQuery[secret]; 
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  } 
+});
+
+var bloomberg_startup_confirmEmailQuery = {};
+app.get('/signup_bloomberg_startup', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex'); 
+    bloomberg_startup_confirmEmailQuery[secret] = email;
+    
+    var mailOptions = {
+      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      to: email,
+      subject: 'Confirm Bloomberg Startup Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_bloomberg_startup?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_bloomberg_startup', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in bloomberg_startup_confirmEmailQuery) {
+    var email = bloomberg_startup_confirmEmailQuery[secret]; 
+    db.connect();
+    db.query('INSERT IGNORE INTO bloomberg_startup SET ?', {email: email}, function (error) {
+      if (error) throw error;
+    });
+    db.end()
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete bloomberg_startup_confirmEmailQuery[secret]; 
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  } 
+});
+
 app.get('*', function(request, response) {
   response.status(404);
   response.sendFile(path.join(__dirname+'/public/404.html'));

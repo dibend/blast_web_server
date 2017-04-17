@@ -169,7 +169,7 @@ p {
     }
 }
 
-header {
+header, .cubes {
     position: relative;
     width: 100%;
     min-height: auto;
