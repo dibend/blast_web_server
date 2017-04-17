@@ -85,11 +85,11 @@ app.get('/confirm_ws', function(request, response) {
   var secret = request.query.secret;
   if(secret in ws_confirmEmailQuery) {
     var email = ws_confirmEmailQuery[secret]; 
-    db.connect();
+    
     db.query('INSERT IGNORE INTO worldstar SET ?', {email: email}, function (error) {
       if (error) throw error;
     });
-    db.end()
+    
     response.redirect('/confirmed.html');
     console.log(email + ' confirmed');
     delete ws_confirmEmailQuery[secret]; 
@@ -131,11 +131,11 @@ app.get('/confirm_bloomberg_stock', function(request, response) {
   var secret = request.query.secret;
   if(secret in bloomberg_stock_confirmEmailQuery) {
     var email = bloomberg_stock_confirmEmailQuery[secret]; 
-    db.connect();
+    
     db.query('INSERT IGNORE INTO bloomberg_stock SET ?', {email: email}, function (error) {
       if (error) throw error;
     });
-    db.end()
+    
     response.redirect('/confirmed.html');
     console.log(email + ' confirmed');
     delete bloomberg_stock_confirmEmailQuery[secret]; 
@@ -177,11 +177,11 @@ app.get('/confirm_bloomberg_currency', function(request, response) {
   var secret = request.query.secret;
   if(secret in bloomberg_currency_confirmEmailQuery) {
     var email = bloomberg_currency_confirmEmailQuery[secret]; 
-    db.connect();
+    
     db.query('INSERT IGNORE INTO bloomberg_currency SET ?', {email: email}, function (error) {
       if (error) throw error;
     });
-    db.end()
+    
     response.redirect('/confirmed.html');
     console.log(email + ' confirmed');
     delete bloomberg_currency_confirmEmailQuery[secret]; 
@@ -223,11 +223,11 @@ app.get('/confirm_bloomberg_startup', function(request, response) {
   var secret = request.query.secret;
   if(secret in bloomberg_startup_confirmEmailQuery) {
     var email = bloomberg_startup_confirmEmailQuery[secret]; 
-    db.connect();
+    
     db.query('INSERT IGNORE INTO bloomberg_startup SET ?', {email: email}, function (error) {
       if (error) throw error;
     });
-    db.end()
+    
     response.redirect('/confirmed.html');
     console.log(email + ' confirmed');
     delete bloomberg_startup_confirmEmailQuery[secret]; 
@@ -269,11 +269,11 @@ app.get('/confirm_reuters_business', function(request, response) {
   var secret = request.query.secret;
   if(secret in reuters_business_confirmEmailQuery) {
     var email = reuters_business_confirmEmailQuery[secret]; 
-    db.connect();
+    
     db.query('INSERT IGNORE INTO reuters_business SET ?', {email: email}, function (error) {
       if (error) throw error;
     });
-    db.end()
+    
     response.redirect('/confirmed.html');
     console.log(email + ' confirmed');
     delete reuters_business_confirmEmailQuery[secret]; 
