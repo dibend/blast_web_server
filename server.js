@@ -21,7 +21,8 @@ var mailer = nodemailer.createTransport(smtpTransport({
   }
 }));
 
-var db = mysql.createConnection({
+var db = mysql.createPool({
+  connectionLimit: 10,
   host: config.mysql_host,
   user: config.mysql_user,
   password: config.mysql_pass,
