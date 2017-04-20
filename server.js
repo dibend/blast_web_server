@@ -294,6 +294,54 @@ app.get('/confirm_reuters_business', function(request, response) {
   } 
 });
 
+var therealreal_chanel_bags_confirmEmailQuery = {};
+app.get('/signup_therealreal_chanel_bags', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    therealreal_chanel_bags_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      to: email,
+      subject: 'Confirm The RealReal Chanel Bags Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_therealreal_chanel_bags?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_therealreal_chanel_bags', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in therealreal_chanel_bags_confirmEmailQuery) {
+    var email = therealreal_chanel_bags_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO therealreal_chanel_bags SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete therealreal_chanel_bags_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
 app.get('*', function(request, response) {
   response.status(404);
   response.sendFile(path.join(__dirname+'/public/404.html'));
