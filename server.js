@@ -88,7 +88,9 @@ app.get('/confirm_ws', function(request, response) {
     var email = ws_confirmEmailQuery[secret]; 
     
     db.query('INSERT IGNORE INTO worldstar SET ?', {email: email}, function (error) {
-      if (error) throw error;
+      if (error) {
+        console.log(error);
+      }
     });
     
     response.redirect('/confirmed.html');
@@ -134,7 +136,9 @@ app.get('/confirm_bloomberg_stock', function(request, response) {
     var email = bloomberg_stock_confirmEmailQuery[secret]; 
     
     db.query('INSERT IGNORE INTO bloomberg_stock SET ?', {email: email}, function (error) {
-      if (error) throw error;
+      if (error) {
+        console.log(error);
+      }
     });
     
     response.redirect('/confirmed.html');
@@ -180,7 +184,9 @@ app.get('/confirm_bloomberg_currency', function(request, response) {
     var email = bloomberg_currency_confirmEmailQuery[secret]; 
     
     db.query('INSERT IGNORE INTO bloomberg_currency SET ?', {email: email}, function (error) {
-      if (error) throw error;
+      if (error) { 
+        console.log(error);
+      }
     });
     
     response.redirect('/confirmed.html');
@@ -226,7 +232,9 @@ app.get('/confirm_bloomberg_startup', function(request, response) {
     var email = bloomberg_startup_confirmEmailQuery[secret]; 
     
     db.query('INSERT IGNORE INTO bloomberg_startup SET ?', {email: email}, function (error) {
-      if (error) throw error;
+      if (error) {
+        console.log(error);
+      }
     });
     
     response.redirect('/confirmed.html');
@@ -272,7 +280,9 @@ app.get('/confirm_reuters_business', function(request, response) {
     var email = reuters_business_confirmEmailQuery[secret]; 
     
     db.query('INSERT IGNORE INTO reuters_business SET ?', {email: email}, function (error) {
-      if (error) throw error;
+      if (error) {
+        console.log(error);
+      }
     });
     
     response.redirect('/confirmed.html');
