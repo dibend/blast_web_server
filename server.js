@@ -390,6 +390,102 @@ app.get('/confirm_gomovies', function(request, response) {
   }
 });
 
+var yahoo_nfl_confirmEmailQuery = {};
+app.get('/signup_yahoo_nfl', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    yahoo_nfl_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      to: email,
+      subject: 'Confirm Yahoo NFL Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_yahoo_nfl?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_yahoo_nfl', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in yahoo_nfl_confirmEmailQuery) {
+    var email = yahoo_nfl_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO yahoo_nfl SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete yahoo_nfl_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+var yahoo_nba_confirmEmailQuery = {};
+app.get('/signup_yahoo_nba', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    yahoo_nba_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      to: email,
+      subject: 'Confirm Yahoo NBA Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_yahoo_nba?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_yahoo_nba', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in yahoo_nba_confirmEmailQuery) {
+    var email = yahoo_nba_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO yahoo_nba SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete yahoo_nba_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
 app.get('*', function(request, response) {
   response.status(404);
   response.sendFile(path.join(__dirname+'/public/404.html'));
