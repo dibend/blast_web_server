@@ -486,6 +486,102 @@ app.get('/confirm_yahoo_nba', function(request, response) {
   }
 });
 
+var monster_it_sales_confirmEmailQuery = {};
+app.get('/signup_monster_it_sales', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    monster_it_sales_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      to: email,
+      subject: 'Confirm Monster IT Sales Jobs Notifications',
+      text: 'Visit https://blastnotifications.com/confirm_monster_it_sales?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_monster_it_sales', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in monster_it_sales_confirmEmailQuery) {
+    var email = monster_it_sales_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO monster_it_sales SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete monster_it_sales_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+var datpiff_confirmEmailQuery = {};
+app.get('/signup_datpiff', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    datpiff_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      to: email,
+      subject: 'Confirm DatPiff Mixtape Notifications',
+      text: 'Visit https://blastnotifications.com/confirm_datpiff?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_datpiff', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in datpiff_confirmEmailQuery) {
+    var email = datpiff_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO datpiff SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete datpiff_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
 app.get('*', function(request, response) {
   response.status(404);
   response.sendFile(path.join(__dirname+'/public/404.html'));
