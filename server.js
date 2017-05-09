@@ -54,6 +54,10 @@ app.get('/follow', function(request, response) {
   response.sendFile(path.join(__dirname+'/public/follow.html'));
 });
 
+app.get('/survey', function(request, response) {
+  response.sendFile(path.join(__dirname+'/public/survey.html'));
+});
+
 var ws_confirmEmailQuery = {};
 app.get('/signup_ws', function(request, response) {
   var email = request.query.email;
