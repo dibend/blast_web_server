@@ -586,6 +586,150 @@ app.get('/confirm_datpiff', function(request, response) {
   }
 });
 
+var nasdaq_headlines_confirmEmailQuery = {};
+app.get('/signup_nasdaq_headlines', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    nasdaq_headlines_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      to: email,
+      subject: 'Confirm Nasdaq Market Headlines Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_nasdaq_headlines?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_nasdaq_headlines', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in nasdaq_headlines_confirmEmailQuery) {
+    var email = nasdaq_headlines_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO nasdaq_headlines SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete nasdaq_headlines_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+var nasdaq_earnings_surprise_confirmEmailQuery = {};
+app.get('/signup_nasdaq_earnings_surprise', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    nasdaq_earnings_surprise_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      to: email,
+      subject: 'Confirm Nasdaq Earnings Surprise Notifications',
+      text: 'Visit https://blastnotifications.com/confirm_nasdaq_earnings_surprise?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_nasdaq_earnings_surprise', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in nasdaq_earnings_surprise_confirmEmailQuery) {
+    var email = nasdaq_earnings_surprise_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO nasdaq_earnings_surprise SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete nasdaq_earnings_surprise_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+var nasdaq_upcoming_ipo_confirmEmailQuery = {};
+app.get('/signup_nasdaq_upcoming_ipo', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    nasdaq_upcoming_ipo_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      to: email,
+      subject: 'Confirm Nasdaq Upcoming IPOs Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_nasdaq_upcoming_ipo?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_nasdaq_upcoming_ipo', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in nasdaq_upcoming_ipo_confirmEmailQuery) {
+    var email = nasdaq_upcoming_ipo_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO nasdaq_upcoming_ipo SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete nasdaq_upcoming_ipo_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
 app.get('*', function(request, response) {
   response.status(404);
   response.sendFile(path.join(__dirname+'/public/404.html'));
