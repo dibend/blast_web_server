@@ -58,6 +58,10 @@ app.get('/survey', function(request, response) {
   response.sendFile(path.join(__dirname+'/public/survey.html'));
 });
 
+app.get('/about', function(request, response) {
+  response.sendFile(path.join(__dirname+'/public/about.html'));
+});
+
 var ws_confirmEmailQuery = {};
 app.get('/signup_ws', function(request, response) {
   var email = request.query.email;
@@ -724,6 +728,54 @@ app.get('/confirm_nasdaq_upcoming_ipo', function(request, response) {
     response.redirect('/confirmed.html');
     console.log(email + ' confirmed');
     delete nasdaq_upcoming_ipo_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+var eb_manhattan_parties_confirmEmailQuery = {};
+app.get('/signup_eb_manhattan_parties', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    eb_manhattan_parties_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      to: email,
+      subject: 'Confirm Eventbrite Manhattan Parties Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_eb_manhattan_parties?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_eb_manhattan_parties', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in eb_manhattan_parties_confirmEmailQuery) {
+    var email = eb_manhattan_parties_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO eb_manhattan_parties SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete eb_manhattan_parties_confirmEmailQuery[secret];
   } else {
     response.status(404);
     response.sendFile(path.join(__dirname+'/public/404.html'));
