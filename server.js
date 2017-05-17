@@ -44,7 +44,7 @@ var creds = {
 
 var app = express();
 app.use(compression());
-app.use(express.static('public'), {index: false, extensions: ['html']});
+app.use(express.static('public', {index: false, extensions: ['html']}));
 
 var ws_confirmEmailQuery = {};
 app.get('/signup_ws', function(request, response) {
