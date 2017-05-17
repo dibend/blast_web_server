@@ -44,23 +44,7 @@ var creds = {
 
 var app = express();
 app.use(compression());
-app.use(express.static('public'));
-
-app.get('/trade', function(request, response) {
-  response.sendFile(path.join(__dirname+'/public/trade.html'));
-});
-
-app.get('/follow', function(request, response) {
-  response.sendFile(path.join(__dirname+'/public/follow.html'));
-});
-
-app.get('/survey', function(request, response) {
-  response.sendFile(path.join(__dirname+'/public/survey.html'));
-});
-
-app.get('/about', function(request, response) {
-  response.sendFile(path.join(__dirname+'/public/about.html'));
-});
+app.use(express.static('public'), {index: false, extensions: ['html']});
 
 var ws_confirmEmailQuery = {};
 app.get('/signup_ws', function(request, response) {
