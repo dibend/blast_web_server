@@ -44,7 +44,7 @@ var creds = {
 
 var app = express();
 app.use(compression());
-app.use(express.static('public', {index: false, extensions: ['html']}));
+app.use(express.static('public', {extensions: ['html']}));
 
 var ws_confirmEmailQuery = {};
 app.get('/signup_ws', function(request, response) {
@@ -808,6 +808,54 @@ app.get('/confirm_executive_orders', function(request, response) {
     response.redirect('/confirmed.html');
     console.log(email + ' confirmed');
     delete executive_orders_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+var forex_factory_confirmEmailQuery = {};
+app.get('/signup_forex_factory', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    forex_factory_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      to: email,
+      subject: 'Confirm Forex Factory Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_forex_factory?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_forex_factory', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in forex_factory_confirmEmailQuery) {
+    var email = forex_factory_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO forex_factory SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete forex_factory_confirmEmailQuery[secret];
   } else {
     response.status(404);
     response.sendFile(path.join(__dirname+'/public/404.html'));
