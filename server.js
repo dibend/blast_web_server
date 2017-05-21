@@ -862,6 +862,102 @@ app.get('/confirm_forex_factory', function(request, response) {
   }
 });
 
+var eb_la_parties_confirmEmailQuery = {};
+app.get('/signup_eb_la_parties', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    eb_la_parties_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      to: email,
+      subject: 'Confirm Eventbrite LA Parties Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_eb_la_parties?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_eb_la_parties', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in eb_la_parties_confirmEmailQuery) {
+    var email = eb_la_parties_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO eb_la_parties SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete eb_la_parties_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+var metacritic_xboxone_confirmEmailQuery = {};
+app.get('/signup_metacritic_xboxone', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    metacritic_xboxone_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      to: email,
+      subject: 'Confirm Metacritic Xbox One Games Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_metacritic_xboxone?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_metacritic_xboxone', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in metacritic_xboxone_confirmEmailQuery) {
+    var email = metacritic_xboxone_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO metacritic_xboxone SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete metacritic_xboxone_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
 app.get('*', function(request, response) {
   response.status(404);
   response.sendFile(path.join(__dirname+'/public/404.html'));
