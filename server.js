@@ -54,7 +54,7 @@ app.get('/signup_ws', function(request, response) {
     ws_confirmEmailQuery[secret] = email;
     
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Worldstar Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_ws?secret=' + secret + ' to verify your subscription!'
@@ -102,7 +102,7 @@ app.get('/signup_bloomberg_stock', function(request, response) {
     bloomberg_stock_confirmEmailQuery[secret] = email;
     
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Bloomberg Stocks Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_bloomberg_stock?secret=' + secret + ' to verify your subscription!'
@@ -150,7 +150,7 @@ app.get('/signup_bloomberg_currency', function(request, response) {
     bloomberg_currency_confirmEmailQuery[secret] = email;
     
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Bloomberg Currency Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_bloomberg_currency?secret=' + secret + ' to verify your subscription!'
@@ -198,7 +198,7 @@ app.get('/signup_bloomberg_startup', function(request, response) {
     bloomberg_startup_confirmEmailQuery[secret] = email;
     
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Bloomberg Startup Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_bloomberg_startup?secret=' + secret + ' to verify your subscription!'
@@ -246,7 +246,7 @@ app.get('/signup_reuters_business', function(request, response) {
     reuters_business_confirmEmailQuery[secret] = email;
     
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Reuters Business Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_reuters_business?secret=' + secret + ' to verify your subscription!'
@@ -294,7 +294,7 @@ app.get('/signup_therealreal_chanel_bags', function(request, response) {
     therealreal_chanel_bags_confirmEmailQuery[secret] = email;
 
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm The RealReal Chanel Bags Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_therealreal_chanel_bags?secret=' + secret + ' to verify your subscription!'
@@ -342,7 +342,7 @@ app.get('/signup_gomovies', function(request, response) {
     gomovies_confirmEmailQuery[secret] = email;
 
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Go Movies Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_gomovies?secret=' + secret + ' to verify your subscription!'
@@ -390,7 +390,7 @@ app.get('/signup_yahoo_nfl', function(request, response) {
     yahoo_nfl_confirmEmailQuery[secret] = email;
 
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Yahoo NFL Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_yahoo_nfl?secret=' + secret + ' to verify your subscription!'
@@ -438,7 +438,7 @@ app.get('/signup_yahoo_nba', function(request, response) {
     yahoo_nba_confirmEmailQuery[secret] = email;
 
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Yahoo NBA Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_yahoo_nba?secret=' + secret + ' to verify your subscription!'
@@ -486,7 +486,7 @@ app.get('/signup_monster_it_sales', function(request, response) {
     monster_it_sales_confirmEmailQuery[secret] = email;
 
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Monster IT Sales Jobs Notifications',
       text: 'Visit https://blastnotifications.com/confirm_monster_it_sales?secret=' + secret + ' to verify your subscription!'
@@ -534,7 +534,7 @@ app.get('/signup_datpiff', function(request, response) {
     datpiff_confirmEmailQuery[secret] = email;
 
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm DatPiff Mixtape Notifications',
       text: 'Visit https://blastnotifications.com/confirm_datpiff?secret=' + secret + ' to verify your subscription!'
@@ -582,7 +582,7 @@ app.get('/signup_nasdaq_headlines', function(request, response) {
     nasdaq_headlines_confirmEmailQuery[secret] = email;
 
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Nasdaq Market Headlines Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_nasdaq_headlines?secret=' + secret + ' to verify your subscription!'
@@ -630,7 +630,7 @@ app.get('/signup_nasdaq_earnings_surprise', function(request, response) {
     nasdaq_earnings_surprise_confirmEmailQuery[secret] = email;
 
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Nasdaq Earnings Surprise Notifications',
       text: 'Visit https://blastnotifications.com/confirm_nasdaq_earnings_surprise?secret=' + secret + ' to verify your subscription!'
@@ -678,7 +678,7 @@ app.get('/signup_nasdaq_upcoming_ipo', function(request, response) {
     nasdaq_upcoming_ipo_confirmEmailQuery[secret] = email;
 
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Nasdaq Upcoming IPOs Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_nasdaq_upcoming_ipo?secret=' + secret + ' to verify your subscription!'
@@ -726,7 +726,7 @@ app.get('/signup_eb_manhattan_parties', function(request, response) {
     eb_manhattan_parties_confirmEmailQuery[secret] = email;
 
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Eventbrite Manhattan Parties Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_eb_manhattan_parties?secret=' + secret + ' to verify your subscription!'
@@ -774,7 +774,7 @@ app.get('/signup_executive_orders', function(request, response) {
     executive_orders_confirmEmailQuery[secret] = email;
 
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm White House Executive Orders Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_executive_orders?secret=' + secret + ' to verify your subscription!'
@@ -822,7 +822,7 @@ app.get('/signup_forex_factory', function(request, response) {
     forex_factory_confirmEmailQuery[secret] = email;
 
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Forex Factory Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_forex_factory?secret=' + secret + ' to verify your subscription!'
@@ -870,7 +870,7 @@ app.get('/signup_eb_la_parties', function(request, response) {
     eb_la_parties_confirmEmailQuery[secret] = email;
 
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Eventbrite LA Parties Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_eb_la_parties?secret=' + secret + ' to verify your subscription!'
@@ -918,7 +918,7 @@ app.get('/signup_metacritic_xboxone', function(request, response) {
     metacritic_xboxone_confirmEmailQuery[secret] = email;
 
     var mailOptions = {
-      from: 'Blast Notifications <blasts@blastnotifications.com>',
+      from: config.from,
       to: email,
       subject: 'Confirm Metacritic Xbox One Games Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_metacritic_xboxone?secret=' + secret + ' to verify your subscription!'
