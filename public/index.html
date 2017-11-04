@@ -229,9 +229,23 @@
             <!-- AddToAny END -->
         </div>
     </section>
-    <div style="position: fixed;bottom: 3%;right: 3%;background:#BC2E52;padding:10px;border-radius:5px;z-index:1;">
-      <a href="notifications.html">View Notifications!</a>
-    </div>
+      <a style="position: fixed;bottom: 3%;right: 3%;background:#BC2E52;padding:10px;border-radius:5px;z-index:1;" id="viewN" href="notifications.html">View Notifications!</a>
+                <script>
+                function loopCall() {
+                    var viewN = document.getElementById('viewN');
+                    console.log(viewN.style.background);
+                    if(viewN.style.background === 'rgb(188, 46, 82)') {
+                        viewN.style.background = 'gold';      
+                        viewN.style.color = 'rgb(188, 46, 82)';      
+                    } else {
+                        viewN.style.background = 'rgb(188, 46, 82)';      
+                        viewN.style.color = 'gold';      
+                    }
+                }
+
+                var loopSpeed = 1000; //ms
+                setInterval(loopCall, loopSpeed);
+                </script>
     <footer>
         <div class="container">
             <ul class="list-inline">
