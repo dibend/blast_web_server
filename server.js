@@ -94,6 +94,54 @@ app.get('/confirm_ws', function(request, response) {
   } 
 });
 
+var daily_funder_confirmEmailQuery = {};
+app.get('/signup_daily_funder', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex'); 
+    daily_funder_confirmEmailQuery[secret] = email;
+    
+    var mailOptions = {
+      from: config.from,
+      to: email,
+      subject: 'Confirm Daily Funder Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_daily_funder?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_daily_funder', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in daily_funder_confirmEmailQuery) {
+    var email = daily_funder_confirmEmailQuery[secret]; 
+    
+    db.query('INSERT IGNORE INTO daily_funder SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+    
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete daily_funder_confirmEmailQuery[secret]; 
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  } 
+});
+
 var bloomberg_stock_confirmEmailQuery = {};
 app.get('/signup_bloomberg_stock', function(request, response) {
   var email = request.query.email;
