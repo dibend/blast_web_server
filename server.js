@@ -46,6 +46,16 @@ var app = express();
 app.use(compression());
 app.use(express.static('public', {extensions: ['html']}));
 
+app.get('/track.png', function(request, response) {
+  var ip = (request.headers['x-forwarded-for'] ||
+    request.connection.remoteAddress ||
+    request.socket.remoteAddress ||
+    request.connection.socket.remoteAddress).split(",")[0];
+
+  console.log(ip + ' opened blast');
+  response.send();
+});
+
 var ws_confirmEmailQuery = {};
 app.get('/signup_ws', function(request, response) {
   var email = request.query.email;
