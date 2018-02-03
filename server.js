@@ -152,6 +152,102 @@ app.get('/confirm_daily_funder', function(request, response) {
   } 
 });
 
+var fedbiz_confirmEmailQuery = {};
+app.get('/signup_fedbiz', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    fedbiz_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: config.from,
+      to: email,
+      subject: 'Confirm FedBizOpps Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_fedbiz?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_fedbiz', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in fedbiz_confirmEmailQuery) {
+    var email = fedbiz_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO fedbiz SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete fedbiz_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+var coin_removals_confirmEmailQuery = {};
+app.get('/signup_coin_removals', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    coin_removals_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: config.from,
+      to: email,
+      subject: 'Confirm Bittrex Coin Removal Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_coin_removals?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_coin_removals', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in coin_removals_confirmEmailQuery) {
+    var email = coin_removals_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO coin_removals SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete coin_removals_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
 var bloomberg_stock_confirmEmailQuery = {};
 app.get('/signup_bloomberg_stock', function(request, response) {
   var email = request.query.email;
@@ -1017,8 +1113,13 @@ app.get('/confirm_metacritic_xboxone', function(request, response) {
 });
 
 app.get('*', function(request, response) {
-  response.status(404);
-  response.sendFile(path.join(__dirname+'/public/404.html'));
+  var ip = (request.headers['x-forwarded-for'] ||
+    request.connection.remoteAddress ||
+    request.socket.remoteAddress ||
+    request.connection.socket.remoteAddress).split(",")[0];
+
+  console.log(ip + ' opened ' + request.originalUrl);
+  response.sendFile(path.join(__dirname+'/public/index.html'));
 });
 
 http.createServer(function (req, res) {
