@@ -52,8 +52,21 @@ app.get('/track.png', function(request, response) {
     request.socket.remoteAddress ||
     request.connection.socket.remoteAddress).split(",")[0];
 
-  console.log(ip + ' opened blast');
+  console.log(ip + ' opened ' + request.query.blast + ' blast');
   response.send();
+});
+
+app.get('/redir', function(request, response) {
+  if(request.query.url) {
+    var ip = (request.headers['x-forwarded-for'] ||
+      request.connection.remoteAddress ||
+      request.socket.remoteAddress ||
+      request.connection.socket.remoteAddress).split(",")[0];
+    console.log(ip + ' opened ' + request.query.url);
+    response.redirect(request.query.url);
+  } else {
+    response.redirect('/');
+  }
 });
 
 var ws_confirmEmailQuery = {};
@@ -1119,7 +1132,7 @@ app.get('*', function(request, response) {
     request.connection.socket.remoteAddress).split(",")[0];
 
   console.log(ip + ' opened ' + request.originalUrl);
-  response.sendFile(path.join(__dirname+'/public/index.html'));
+  response.redirect('/');
 });
 
 http.createServer(function (req, res) {
