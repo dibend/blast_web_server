@@ -2,3 +2,4 @@ letsencrypt
 node_modules
 blast.log
 config.json
+public/blasts/*

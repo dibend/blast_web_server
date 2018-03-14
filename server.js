@@ -52,7 +52,7 @@ app.get('/track.png', function(request, response) {
     request.socket.remoteAddress ||
     request.connection.socket.remoteAddress).split(",")[0];
 
-  console.log(ip + ' opened ' + request.query.blast + ' blast');
+  console.log(ip + ' opened ' + request.query.blast + ' blast at ' + (new Date().toUTCString()));
   response.send();
 });
 
@@ -62,7 +62,7 @@ app.get('/redir', function(request, response) {
       request.connection.remoteAddress ||
       request.socket.remoteAddress ||
       request.connection.socket.remoteAddress).split(",")[0];
-    console.log(ip + ' opened ' + request.query.url);
+    console.log(ip + ' opened ' + request.query.url + ' at ' + (new Date().toUTCString()));
     response.redirect(request.query.url);
   } else {
     response.redirect('/');
@@ -1126,12 +1126,6 @@ app.get('/confirm_metacritic_xboxone', function(request, response) {
 });
 
 app.get('*', function(request, response) {
-  var ip = (request.headers['x-forwarded-for'] ||
-    request.connection.remoteAddress ||
-    request.socket.remoteAddress ||
-    request.connection.socket.remoteAddress).split(",")[0];
-
-  console.log(ip + ' opened ' + request.originalUrl);
   response.redirect('/');
 });
 
