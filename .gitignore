@@ -3,3 +3,4 @@ node_modules
 blast.log
 config.json
 public/blasts/*
+*_feed.html
