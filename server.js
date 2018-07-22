@@ -1,5 +1,7 @@
+'use strict';
 var fs = require('fs');
 var express = require('express');
+var cors = require('cors');
 var http = require('http');
 var https = require('https');
 var compression = require('compression');
@@ -43,6 +45,7 @@ var creds = {
 };
 
 var app = express();
+app.use(cors());
 app.use(compression());
 app.use(express.static('public', {extensions: ['html']}));
 
