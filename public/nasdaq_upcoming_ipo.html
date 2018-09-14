@@ -107,7 +107,23 @@
                                   <input name="email" placeholder="Enter Email Address" style="font-size:15px;color:#BC2E52" type="email" required="required" class="form-control"/><br/><br/>
                                   <button type="submit" style="margin:auto;font-size:14px;color:#BC2E52;background:rgba(255,255,255,0.9);" class="btn btn-outline btn-xl">Follow!</button>
                                 </form>
-                                
+                                <h3 style="text-decoration: underline;" id='content'></h3>
+                                <script>
+                                function loadDoc() {
+                                    var xhttp = new XMLHttpRequest();
+                                    xhttp.onreadystatechange = function() {
+                                        if (this.readyState == 4 && this.status == 200) {
+                                            var ar = this.responseText.split('\n');
+                                            for (i = ar.length-1; i >= 0; i--) {
+                                                document.getElementById('content').innerHTML += (ar[i] + '<br><br>');
+                                            }
+                                        }
+                                    };
+                                    xhttp.open("GET", "https://blastnotifications.com/nasdaq_ipo_feed", true);
+                                    xhttp.send();
+                                }
+                                window.onload = loadDoc();
+                                </script> 
                                 <br/>
                                 <a href="stocks.html" class="btn btn-outline"><span class="glyphicon glyphicon-circle-arrow-left"></span> Back</a>
                                 <br/><br/>
