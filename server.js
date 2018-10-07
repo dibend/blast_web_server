@@ -1320,6 +1320,54 @@ app.get('/confirm_cnn_news_videos', function(request, response) {
   }
 });
 
+var msnbc_news_videos_confirmEmailQuery = {};
+app.get('/signup_msnbc_news_videos', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    msnbc_news_videos_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: config.from,
+      to: email,
+      subject: 'Confirm MSNBC News Videos Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_msnbc_news_videos?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_msnbc_news_videos', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in msnbc_news_videos_confirmEmailQuery) {
+    var email = msnbc_news_videos_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO msnbc_news_videos SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete msnbc_news_videos_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
 app.get('*', function(request, response) {
   response.redirect('/');
 });
