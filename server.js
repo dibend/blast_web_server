@@ -1368,6 +1368,54 @@ app.get('/confirm_msnbc_news_videos', function(request, response) {
   }
 });
 
+var reuters_tech_confirmEmailQuery = {};
+app.get('/signup_reuters_tech', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    reuters_tech_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: config.from,
+      to: email,
+      subject: 'Confirm Reuters Tech News Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_reuters_tech?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_reuters_tech', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in reuters_tech_confirmEmailQuery) {
+    var email = reuters_tech_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO reuters_tech SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete reuters_tech_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
 app.get('*', function(request, response) {
   response.redirect('/');
 });
