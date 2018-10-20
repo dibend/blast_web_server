@@ -1524,7 +1524,7 @@ app.get('/signup_currency_direct', function(request, response) {
     var mailOptions = {
       from: config.from,
       to: email,
-      subject: 'Confirm Currency Direct News Blast Notification',
+      subject: 'Confirm Currencies Direct News Blast Notification',
       text: 'Visit https://blastnotifications.com/confirm_currency_direct?secret=' + secret + ' to verify your subscription!'
     };
 
