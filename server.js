@@ -11,6 +11,7 @@ var emailValidator = require('email-validator');
 var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
 var mysql = require('mysql');
+var noBots = require('express-nobots');
 var config = require('./config');
 
 var mailer = nodemailer.createTransport(smtpTransport({
@@ -47,6 +48,7 @@ var creds = {
 var app = express();
 app.use(cors());
 app.use(compression());
+app.use(noBots());
 app.use(express.static('public', {extensions: ['html']}));
 
 app.get('/track.png', function(request, response) {
@@ -1458,6 +1460,54 @@ app.get('/confirm_cnet', function(request, response) {
     response.redirect('/confirmed.html');
     console.log(email + ' confirmed');
     delete cnet_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+var marketwatch_currency_confirmEmailQuery = {};
+app.get('/signup_marketwatch_currency', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    marketwatch_currency_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: config.from,
+      to: email,
+      subject: 'Confirm Marketwatch Currency News Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_marketwatch_currency?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_marketwatch_currency', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in marketwatch_currency_confirmEmailQuery) {
+    var email = marketwatch_currency_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO marketwatch_currency SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete marketwatch_currency_confirmEmailQuery[secret];
   } else {
     response.status(404);
     response.sendFile(path.join(__dirname+'/public/404.html'));
