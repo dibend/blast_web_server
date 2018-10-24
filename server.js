@@ -57,7 +57,7 @@ app.get('/track.png', function(request, response) {
     request.socket.remoteAddress ||
     request.connection.socket.remoteAddress).split(",")[0];
 
-  console.log(ip + ' opened ' + request.query.blast + ' blast at ' + (new Date().toUTCString()));
+  console.log(ip + ' ' + request.query.email + ' opened ' + request.query.blast + ' blast at ' + (new Date().toUTCString()));
   response.send();
 });
 
