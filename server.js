@@ -1466,18 +1466,18 @@ app.get('/confirm_cnet', function(request, response) {
   }
 });
 
-var marketwatch_currency_confirmEmailQuery = {};
-app.get('/signup_marketwatch_currency', function(request, response) {
+var the_verge_confirmEmailQuery = {};
+app.get('/signup_the_verge', function(request, response) {
   var email = request.query.email;
   if (emailValidator.validate(email)) {
     var secret = crypto.randomBytes(64).toString('hex');
-    marketwatch_currency_confirmEmailQuery[secret] = email;
+    the_verge_confirmEmailQuery[secret] = email;
 
     var mailOptions = {
       from: config.from,
       to: email,
-      subject: 'Confirm Marketwatch Currency News Blast Notification',
-      text: 'Visit https://blastnotifications.com/confirm_marketwatch_currency?secret=' + secret + ' to verify your subscription!'
+      subject: 'Confirm The Verge Articles Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_the_verge?secret=' + secret + ' to verify your subscription!'
     };
 
     mailer.sendMail(mailOptions, function(err, res) {
@@ -1494,12 +1494,12 @@ app.get('/signup_marketwatch_currency', function(request, response) {
   }
 });
 
-app.get('/confirm_marketwatch_currency', function(request, response) {
+app.get('/confirm_the_verge', function(request, response) {
   var secret = request.query.secret;
-  if(secret in marketwatch_currency_confirmEmailQuery) {
-    var email = marketwatch_currency_confirmEmailQuery[secret];
+  if(secret in the_verge_confirmEmailQuery) {
+    var email = the_verge_confirmEmailQuery[secret];
 
-    db.query('INSERT IGNORE INTO marketwatch_currency SET ?', {email: email}, function (error) {
+    db.query('INSERT IGNORE INTO the_verge SET ?', {email: email}, function (error) {
       if (error) {
         console.log(error);
       }
@@ -1507,7 +1507,7 @@ app.get('/confirm_marketwatch_currency', function(request, response) {
 
     response.redirect('/confirmed.html');
     console.log(email + ' confirmed');
-    delete marketwatch_currency_confirmEmailQuery[secret];
+    delete the_verge_confirmEmailQuery[secret];
   } else {
     response.status(404);
     response.sendFile(path.join(__dirname+'/public/404.html'));
@@ -1556,6 +1556,54 @@ app.get('/confirm_currency_direct', function(request, response) {
     response.redirect('/confirmed.html');
     console.log(email + ' confirmed');
     delete currency_direct_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+var itunes_songs_confirmEmailQuery = {};
+app.get('/signup_itunes_songs', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    itunes_songs_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: config.from,
+      to: email,
+      subject: 'Confirm iTunes Songs Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_itunes_songs?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_itunes_songs', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in itunes_songs_confirmEmailQuery) {
+    var email = itunes_songs_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO itunes_songs SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete itunes_songs_confirmEmailQuery[secret];
   } else {
     response.status(404);
     response.sendFile(path.join(__dirname+'/public/404.html'));
