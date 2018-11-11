@@ -1610,6 +1610,150 @@ app.get('/confirm_itunes_songs', function(request, response) {
   }
 });
 
+var itunes_albums_confirmEmailQuery = {};
+app.get('/signup_itunes_albums', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    itunes_albums_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: config.from,
+      to: email,
+      subject: 'Confirm iTunes Albums Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_itunes_albums?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_itunes_albums', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in itunes_albums_confirmEmailQuery) {
+    var email = itunes_albums_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO itunes_albums SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete itunes_albums_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+var itunes_free_apps_confirmEmailQuery = {};
+app.get('/signup_itunes_free_apps', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    itunes_free_apps_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: config.from,
+      to: email,
+      subject: 'Confirm iTunes Free Apps Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_itunes_free_apps?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_itunes_free_apps', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in itunes_free_apps_confirmEmailQuery) {
+    var email = itunes_free_apps_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO itunes_free_apps SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete itunes_free_apps_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+var itunes_paid_apps_confirmEmailQuery = {};
+app.get('/signup_itunes_paid_apps', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    itunes_paid_apps_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: config.from,
+      to: email,
+      subject: 'Confirm iTunes Paid Apps Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_itunes_paid_apps?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(email + ' confirmation sent');
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_itunes_paid_apps', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in itunes_paid_apps_confirmEmailQuery) {
+    var email = itunes_paid_apps_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO itunes_paid_apps SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(email + ' confirmed');
+    delete itunes_paid_apps_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
 app.get('*', function(request, response) {
   response.redirect('/');
 });
