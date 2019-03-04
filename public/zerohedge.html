@@ -13,7 +13,7 @@
     <meta name="referrer" content="origin">
     <meta property="og:site_name" content="BlastNotifications.com">
     <meta property="og:type" content="website">
-    <link rel="canonical" href="https://blastnotifications.com/notifications">
+    <link rel="canonical" href="https://blastnotifications.com/music">
     <script type="application/ld+json">{"\u0040context":"http:\/\/schema.org","\u0040type":"WebSite","name":"Blast Notifications","url":"https:\/\/blastnotifications.com\/"}</script>
 
     <title>Blast Notifications - Follow Your Favorite Web Pages and Get Notified of New Uploads!</title>
@@ -93,21 +93,52 @@
         <!-- /.container-fluid -->
     </nav>
 
-    <header style="height:100%">
+    <div class="cubes">
         <div class="container">
             <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <br/><br/><br/><br/><br/>
-                    <a href="nasdaq_earnings_surprise.html" class="btn btn-outline btn-xl btn-block" style="color:#BC2E52;background:rgba(255,255,255,0.9);">Nasdaq Earnings Surprises</a>
-                    <a href="nasdaq_upcoming_ipo.html" class="btn btn-outline btn-xl btn-block" style="color:#BC2E52;background:rgba(255,255,255,0.9);">Nasdaq Upcoming IPOs</a>
-                    <a href="zerohedge.html" class="btn btn-outline btn-xl btn-block" style="color:#BC2E52;background:rgba(255,255,255,0.9);">Zero Hedge Articles</a>
-                    <br>
-                    <a href="notifications.html" class="btn btn-outline"><span class="glyphicon glyphicon-circle-arrow-left"></span> Back</a>
-                    <br/><br/>
+                <div class="col-sm-7">
+                    <div class="header-content">
+                        <div class="header-content-inner">
+                            <div class="input-group">
+                                <br/><br/><br/>
+                                
+                                <h3><a href="http://www.zerohedge.com"><b>Zero Hedge Articles</b></a></h3>
+                                <form action="https://blastnotifications.com/signup_zerohedge">
+                                  <input name="email" placeholder="Enter Email Address" style="font-size:15px;color:#BC2E52" type="email" required="required" class="form-control"/><br/><br/>
+                                  <button type="submit" style="margin:auto;font-size:14px;color:#BC2E52;background:rgba(255,255,255,0.9);" class="btn btn-outline btn-xl">Follow!</button>
+                                </form><br>
+                                <h3 style="text-decoration: underline;" id='content'></h3>
+                                <script>
+                                function loadDoc() {
+                                  var xhttp = new XMLHttpRequest();
+                                  xhttp.onreadystatechange = function() {
+                                    if (this.readyState == 4 && this.status == 200) {
+                                      var ar = this.responseText.split('\n');
+                                      for (i = ar.length-2; i >= 0; i--) {
+                                        document.getElementById('content').innerHTML += (ar[i] + '<br><br>');
+                                      }
+                                    }
+                                 };
+                                 xhttp.open("GET", "https://blastnotifications.com/zerohedge_feed", true);
+                                 xhttp.send();
+                                }           
+                                window.onload = loadDoc();
+                                </script>
+                                <br/>
+                                <a href="music.html" class="btn btn-outline"><span class="glyphicon glyphicon-circle-arrow-left"></span> Back</a>
+                                <br/><br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                  <br/>
+                  <br/>
+                  <img src="img/rocket.png" alt="">
                 </div>
             </div>
         </div>
-    </header>
+    </div>
 
     <footer>
         <div class="container">
@@ -124,7 +155,7 @@
             </ul>
         </div>
     </footer>
-
+    
     <!-- jQuery -->
     <script src="lib/jquery/jquery.min.js"></script>
 
@@ -140,4 +171,3 @@
 </body>
 
 </html>
-
