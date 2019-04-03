@@ -48,7 +48,7 @@ var creds = {
 var app = express();
 app.use(cors());
 app.use(compression());
-app.use(noBots());
+//app.use(noBots());
 app.use(express.static('public', {extensions: ['html']}));
 
 app.get('/track.png', function(request, response) {
