@@ -49,22 +49,22 @@ app.use(cors());
 app.use(compression());
 app.use(express.static('public', {extensions: ['html']}));
 
-app.get('/track.png', function(request, response) {
-  var ip = (request.headers['x-forwarded-for'] ||
+function getIP(request) {
+  return (request.headers['x-forwarded-for'] ||
     request.connection.remoteAddress ||
     request.socket.remoteAddress ||
     request.connection.socket.remoteAddress).split(",")[0];
+}
 
+app.get('/track.png', function(request, response) {
+  var ip = getIP(request);
   console.log(ip + ' ' + request.query.email + ' loaded ' + request.query.blast + ' blast at ' + (new Date().toUTCString()));
   response.send();
 });
 
 app.get('/redir', function(request, response) {
   if(request.query.url) {
-    var ip = (request.headers['x-forwarded-for'] ||
-      request.connection.remoteAddress ||
-      request.socket.remoteAddress ||
-      request.connection.socket.remoteAddress).split(",")[0];
+    var ip = getIP(request);
     console.log(ip + ' opened ' + request.query.url + ' at ' + (new Date().toUTCString()));
     response.redirect(request.query.url);
   } else {
@@ -92,7 +92,7 @@ app.get('/signup_ws', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -112,7 +112,7 @@ app.get('/confirm_ws', function(request, response) {
     });
     
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete ws_confirmEmailQuery[secret]; 
   } else {
     response.status(404);
@@ -140,7 +140,7 @@ app.get('/signup_daily_funder', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -160,7 +160,7 @@ app.get('/confirm_daily_funder', function(request, response) {
     });
     
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete daily_funder_confirmEmailQuery[secret]; 
   } else {
     response.status(404);
@@ -188,7 +188,7 @@ app.get('/signup_fedbiz', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -208,7 +208,7 @@ app.get('/confirm_fedbiz', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete fedbiz_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -236,7 +236,7 @@ app.get('/signup_coin_removals', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -256,7 +256,7 @@ app.get('/confirm_coin_removals', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete coin_removals_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -284,7 +284,7 @@ app.get('/signup_zerohedge', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -304,7 +304,7 @@ app.get('/confirm_zerohedge', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete zerohedge_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -332,7 +332,7 @@ app.get('/signup_bloomberg_stock', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -352,7 +352,7 @@ app.get('/confirm_bloomberg_stock', function(request, response) {
     });
     
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete bloomberg_stock_confirmEmailQuery[secret]; 
   } else {
     response.status(404);
@@ -380,7 +380,7 @@ app.get('/signup_bloomberg_currency', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -400,7 +400,7 @@ app.get('/confirm_bloomberg_currency', function(request, response) {
     });
     
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete bloomberg_currency_confirmEmailQuery[secret]; 
   } else {
     response.status(404);
@@ -428,7 +428,7 @@ app.get('/signup_bloomberg_startup', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -448,7 +448,7 @@ app.get('/confirm_bloomberg_startup', function(request, response) {
     });
     
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete bloomberg_startup_confirmEmailQuery[secret]; 
   } else {
     response.status(404);
@@ -476,7 +476,7 @@ app.get('/signup_reuters_business', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -496,7 +496,7 @@ app.get('/confirm_reuters_business', function(request, response) {
     });
     
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete reuters_business_confirmEmailQuery[secret]; 
   } else {
     response.status(404);
@@ -524,7 +524,7 @@ app.get('/signup_therealreal_chanel_bags', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -544,7 +544,7 @@ app.get('/confirm_therealreal_chanel_bags', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete therealreal_chanel_bags_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -572,7 +572,7 @@ app.get('/signup_gomovies', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -592,7 +592,7 @@ app.get('/confirm_gomovies', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete gomovies_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -620,7 +620,7 @@ app.get('/signup_yahoo_nfl', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -640,7 +640,7 @@ app.get('/confirm_yahoo_nfl', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete yahoo_nfl_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -668,7 +668,7 @@ app.get('/signup_yahoo_nba', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -688,7 +688,7 @@ app.get('/confirm_yahoo_nba', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete yahoo_nba_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -716,7 +716,7 @@ app.get('/signup_monster_it_sales', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -736,7 +736,7 @@ app.get('/confirm_monster_it_sales', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete monster_it_sales_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -764,7 +764,7 @@ app.get('/signup_datpiff', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -784,7 +784,7 @@ app.get('/confirm_datpiff', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete datpiff_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -812,7 +812,7 @@ app.get('/signup_nasdaq_headlines', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -832,7 +832,7 @@ app.get('/confirm_nasdaq_headlines', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete nasdaq_headlines_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -860,7 +860,7 @@ app.get('/signup_nasdaq_earnings_surprise', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -880,7 +880,7 @@ app.get('/confirm_nasdaq_earnings_surprise', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete nasdaq_earnings_surprise_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -908,7 +908,7 @@ app.get('/signup_nasdaq_upcoming_ipo', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -928,7 +928,7 @@ app.get('/confirm_nasdaq_upcoming_ipo', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete nasdaq_upcoming_ipo_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -956,7 +956,7 @@ app.get('/signup_eb_manhattan_parties', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -976,7 +976,7 @@ app.get('/confirm_eb_manhattan_parties', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete eb_manhattan_parties_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1004,7 +1004,7 @@ app.get('/signup_executive_orders', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1024,7 +1024,7 @@ app.get('/confirm_executive_orders', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete executive_orders_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1052,7 +1052,7 @@ app.get('/signup_forex_factory', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1072,7 +1072,7 @@ app.get('/confirm_forex_factory', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete forex_factory_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1100,7 +1100,7 @@ app.get('/signup_eb_la_parties', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1120,7 +1120,7 @@ app.get('/confirm_eb_la_parties', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete eb_la_parties_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1148,7 +1148,7 @@ app.get('/signup_metacritic_xboxone', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1168,7 +1168,7 @@ app.get('/confirm_metacritic_xboxone', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete metacritic_xboxone_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1196,7 +1196,7 @@ app.get('/signup_metacritic_ps4', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1216,7 +1216,7 @@ app.get('/confirm_metacritic_ps4', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete metacritic_ps4_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1244,7 +1244,7 @@ app.get('/signup_fox_news_videos', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1264,7 +1264,7 @@ app.get('/confirm_fox_news_videos', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete fox_news_videos_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1292,7 +1292,7 @@ app.get('/signup_metacritic_movies', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1312,7 +1312,7 @@ app.get('/confirm_metacritic_movies', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete metacritic_movies_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1340,7 +1340,7 @@ app.get('/signup_cnn_news_videos', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1360,7 +1360,7 @@ app.get('/confirm_cnn_news_videos', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete cnn_news_videos_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1388,7 +1388,7 @@ app.get('/signup_msnbc_news_videos', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1408,7 +1408,7 @@ app.get('/confirm_msnbc_news_videos', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete msnbc_news_videos_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1436,7 +1436,7 @@ app.get('/signup_reuters_tech', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1456,7 +1456,7 @@ app.get('/confirm_reuters_tech', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete reuters_tech_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1484,7 +1484,7 @@ app.get('/signup_cnet', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1504,7 +1504,7 @@ app.get('/confirm_cnet', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete cnet_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1532,7 +1532,7 @@ app.get('/signup_the_verge', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1552,7 +1552,7 @@ app.get('/confirm_the_verge', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete the_verge_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1580,7 +1580,7 @@ app.get('/signup_currency_direct', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1600,7 +1600,7 @@ app.get('/confirm_currency_direct', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete currency_direct_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1628,7 +1628,7 @@ app.get('/signup_itunes_songs', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1648,7 +1648,7 @@ app.get('/confirm_itunes_songs', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete itunes_songs_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1676,7 +1676,7 @@ app.get('/signup_itunes_albums', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1696,7 +1696,7 @@ app.get('/confirm_itunes_albums', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete itunes_albums_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1724,7 +1724,7 @@ app.get('/signup_itunes_free_apps', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1744,7 +1744,7 @@ app.get('/confirm_itunes_free_apps', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete itunes_free_apps_confirmEmailQuery[secret];
   } else {
     response.status(404);
@@ -1772,7 +1772,7 @@ app.get('/signup_itunes_paid_apps', function(request, response) {
       }
       mailer.close();
     });
-    console.log(email + ' confirmation sent at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
     response.redirect('/confirm.html');
   } else {
     response.status(404);
@@ -1792,7 +1792,7 @@ app.get('/confirm_itunes_paid_apps', function(request, response) {
     });
 
     response.redirect('/confirmed.html');
-    console.log(email + ' confirmed at ' + (new Date().toUTCString()));
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete itunes_paid_apps_confirmEmailQuery[secret];
   } else {
     response.status(404);
