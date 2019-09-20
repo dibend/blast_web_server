@@ -1,0 +1,20 @@
+<script>
+var links = [];
+
+for (var i = 0, len = localStorage.length; i < len; i++) {
+  var request = new XMLHttpRequest();
+  request.open('GET', localStorage.key(i), false);
+  request.send(null);
+
+  if (request.status === 200) {
+    links = links.concat(request.responseText.split('\n'));
+    links.pop();
+  } 
+}
+
+var parser = new DOMParser();
+links.sort(function(a, b) { return parser.parseFromString(b, 'text/html').body.firstChild.id - parser.parseFromString(a, 'text/html').body.firstChild.id });
+links.forEach(function(element) {
+  document.write(element + '<br>');
+});
+</script>
