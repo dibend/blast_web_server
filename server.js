@@ -11,6 +11,7 @@ var emailValidator = require('email-validator');
 var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
 var mysql = require('mysql');
+var frameguard = require('frameguard');
 var config = require('./config');
 
 var mailer = nodemailer.createTransport(smtpTransport({
@@ -47,6 +48,7 @@ var creds = {
 var app = express();
 app.use(cors());
 app.use(compression());
+app.use(frameguard({action: 'deny'}));
 app.use(express.static('public', {extensions: ['html']}));
 
 function getIP(request) {
