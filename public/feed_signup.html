@@ -111,35 +111,23 @@
                         <div class="header-content-inner">
                             <div class="input-group">
                                 <br/><br/><br/>
-                                <a class="btn btn-outline btn-xl" href="/feed_signup">Manage Feed</a>
-                                <h3 style="text-decoration: underline;" id='content'></h3>
-                                <script>
-                                function loadDoc() {
-                                    if(localStorage.length === 0) {
-                                        alert('Please select at least one item to add to your feed.');
-                                        window.location='/feed_signup';  
-                                    }
-                                    var links = [];
-
-                                    for (var i = 0, len = localStorage.length; i < len; i++) {
-                                        var request = new XMLHttpRequest();
-                                        request.open('GET', localStorage.key(i), false);
-                                        request.send(null);
-
-                                        if (request.status === 200) {
-                                            links = links.concat(request.responseText.split('\n'));
-                                            links.pop();
-                                        } 
-                                    }
-
-                                    var parser = new DOMParser();
-                                    links.sort(function(a, b) { return parser.parseFromString(b, 'text/html').body.firstChild.id - parser.parseFromString(a, 'text/html').body.firstChild.id });
-                                    links.forEach(function(element) {
-                                        document.getElementById('content').innerHTML += (element + '<br><br>');
-                                    });
-                                }
-                                window.onload = loadDoc();
-                                </script> 
+                                <a id="stocksButton" class="btn btn-outline btn-xl" type="button" data-toggle="collapse" data-target="#stocks" aria-expanded="false" aria-controls="stocks">
+                                  Stocks <span class="glyphicon glyphicon-plus"></span>
+                                </a>
+                                <h3 class="collapse" id="stocks">
+                                  <input id="ipoCheck" onclick="ipo()" type="checkbox"> NASDAQ Upcoming IPOs</input><br>
+                                  <input id="earningsCheck" onclick="earnings()" type="checkbox"> NASDAQ Earnings Surprises</input><br>
+                                </h3>
+                                <br><br>
+                                <a id="gamingButton" class="btn btn-outline btn-xl" type="button" data-toggle="collapse" data-target="#gaming" aria-expanded="false" aria-controls="gaming">
+                                  Gaming <span class="glyphicon glyphicon-plus"></span>
+                                </a>
+                                <h3 class="collapse" id="gaming">
+                                  <input id="xboxCheck" onclick="xbox()" type="checkbox"> Xbox One Game Releases</input><br>
+                                  <input id="ps4Check" onclick="ps4()" type="checkbox"> PS4 Game Releases</input><br>
+                                </h3>
+                                <br><br>
+                                <a class="btn btn-outline btn-xl" href="/feed">Finished</a>
                                 <br/><br/>
                             </div>
                         </div>
@@ -169,7 +157,7 @@
             </ul>
         </div>
     </footer>
-    
+
     <!-- jQuery -->
     <script src="lib/jquery/jquery.min.js"></script>
 
@@ -181,6 +169,63 @@
 
     <!-- Theme JavaScript -->
     <script src="js/new-age.min.js"></script>
+
+    <script>
+    function ipo() {
+      if(localStorage.getItem('/nasdaq_ipo_feed')) {
+        localStorage.removeItem('/nasdaq_ipo_feed');
+      } else {
+        localStorage.setItem('/nasdaq_ipo_feed', 'true');
+      }
+    }
+    function earnings() {
+      if(localStorage.getItem('/nasdaq_earnings_surprise_feed')) {
+        localStorage.removeItem('/nasdaq_earnings_surprise_feed');
+      } else {
+        localStorage.setItem('/nasdaq_earnings_surprise_feed', 'true');
+      }
+    }
+    function xbox() {
+      if(localStorage.getItem('/metacritic_xboxone_feed')) {
+        localStorage.removeItem('/metacritic_xboxone_feed');
+      } else {
+        localStorage.setItem('/metacritic_xboxone_feed', 'true');
+      }
+    }
+    function ps4() {
+      if(localStorage.getItem('/metacritic_ps4_feed')) {
+        localStorage.removeItem('/metacritic_ps4_feed');
+      } else {
+        localStorage.setItem('/metacritic_ps4_feed', 'true');
+      }
+    }
+    $(function(){
+      if(localStorage.getItem('/nasdaq_ipo_feed')) {
+        $('#ipoCheck').prop('checked', true);
+      }
+      if(localStorage.getItem('/nasdaq_earnings_surprise_feed')) {
+        $('#earningsCheck').prop('checked', true);
+      }
+      if(localStorage.getItem('/metacritic_xboxone_feed')) {
+        $('#xboxCheck').prop('checked', true);
+      }
+      if(localStorage.getItem('/metacritic_ps4_feed')) {
+        $('#ps4Check').prop('checked', true);
+      }
+      $('#stocks').on('hide.bs.collapse', function () {
+        $('#stocksButton').html('Stocks <span class="glyphicon glyphicon-plus"></span>');
+      })
+      $('#stocks').on('show.bs.collapse', function () {
+        $('#stocksButton').html('Stocks <span class="glyphicon glyphicon-minus"></span>');
+      })
+      $('#gaming').on('hide.bs.collapse', function () {
+        $('#gamingButton').html('Gaming <span class="glyphicon glyphicon-plus"></span>');
+      })
+      $('#gaming').on('show.bs.collapse', function () {
+        $('#gamingButton').html('Gaming <span class="glyphicon glyphicon-minus"></span>');
+      })
+    })
+    </script>
 
 </body>
 
