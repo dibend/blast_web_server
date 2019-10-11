@@ -117,7 +117,7 @@
                                 <h3 class="collapse" id="stocks">
                                   <input id="ipoCheck" onclick="ipo()" type="checkbox"> NASDAQ Upcoming IPOs</input><br>
                                   <input id="earningsCheck" onclick="earnings()" type="checkbox"> NASDAQ Earnings Surprises</input><br>
-                                  <input id="zerohedgeCheck" onclick="zerohedge()" type="checkbox"> Zero Hedge Articles</input><br>
+                                  <input id="zerohedgeCheck" onclick="zerohedge()" type="checkbox"> Zero Hedge Articles</input>
                                 </h3>
                                 <br><br>
                                 <a id="gamingButton" class="btn btn-outline btn-xl" type="button" data-toggle="collapse" data-target="#gaming" aria-expanded="false" aria-controls="gaming">
@@ -125,7 +125,16 @@
                                 </a>
                                 <h3 class="collapse" id="gaming">
                                   <input id="xboxCheck" onclick="xbox()" type="checkbox"> Xbox One Game Releases</input><br>
-                                  <input id="ps4Check" onclick="ps4()" type="checkbox"> PS4 Game Releases</input><br>
+                                  <input id="ps4Check" onclick="ps4()" type="checkbox"> PS4 Game Releases</input>
+                                </h3>
+                                <br><br>
+                                <a id="newsButton" class="btn btn-outline btn-xl" type="button" data-toggle="collapse" data-target="#news" aria-expanded="false" aria-controls="news">
+                                  News <span class="glyphicon glyphicon-plus"></span>
+                                </a>
+                                <h3 class="collapse" id="news">
+                                  <input id="cnnCheck" onclick="cnn()" type="checkbox"> CNN News Videos</input><br>
+                                  <input id="foxCheck" onclick="fox()" type="checkbox"> Fox News Videos</input><br>
+                                  <input id="msnbcCheck" onclick="msnbc()" type="checkbox"> MSNBC News Videos</input>
                                 </h3>
                                 <br><br>
                                 <a class="btn btn-outline btn-xl" href="/feed">Finished</a>
@@ -172,6 +181,7 @@
     <script src="js/new-age.min.js"></script>
 
     <script>
+    'use strict';
     function ipo() {
       if(localStorage.getItem('/nasdaq_ipo_feed')) {
         localStorage.removeItem('/nasdaq_ipo_feed');
@@ -207,6 +217,27 @@
         localStorage.setItem('/metacritic_ps4_feed', 'true');
       }
     }
+    function cnn() {
+      if(localStorage.getItem('/cnn_news_videos_feed')) {
+        localStorage.removeItem('/cnn_news_videos_feed');
+      } else {
+        localStorage.setItem('/cnn_news_videos_feed', 'true');
+      }
+    }
+    function fox() {
+      if(localStorage.getItem('/fox_news_videos_feed')) {
+        localStorage.removeItem('/fox_news_videos_feed');
+      } else {
+        localStorage.setItem('/fox_news_videos_feed', 'true');
+      }
+    }
+    function msnbc() {
+      if(localStorage.getItem('/msnbc_news_videos_feed')) {
+        localStorage.removeItem('/msnbc_news_videos_feed');
+      } else {
+        localStorage.setItem('/msnbc_news_videos_feed', 'true');
+      }
+    }
     $(function(){
       if(localStorage.getItem('/nasdaq_ipo_feed')) {
         $('#ipoCheck').prop('checked', true);
@@ -223,6 +254,15 @@
       if(localStorage.getItem('/metacritic_ps4_feed')) {
         $('#ps4Check').prop('checked', true);
       }
+      if(localStorage.getItem('/cnn_news_videos_feed')) {
+        $('#cnnCheck').prop('checked', true);
+      }
+      if(localStorage.getItem('/fox_news_videos_feed')) {
+        $('#foxCheck').prop('checked', true);
+      }
+      if(localStorage.getItem('/msnbc_news_videos_feed')) {
+        $('#msnbcCheck').prop('checked', true);
+      }
       $('#stocks').on('hide.bs.collapse', function () {
         $('#stocksButton').html('Stocks <span class="glyphicon glyphicon-plus"></span>');
       })
@@ -234,6 +274,12 @@
       })
       $('#gaming').on('show.bs.collapse', function () {
         $('#gamingButton').html('Gaming <span class="glyphicon glyphicon-minus"></span>');
+      })
+      $('#news').on('hide.bs.collapse', function () {
+        $('#newsButton').html('News <span class="glyphicon glyphicon-plus"></span>');
+      })
+      $('#news').on('show.bs.collapse', function () {
+        $('#newsButton').html('News <span class="glyphicon glyphicon-minus"></span>');
       })
     })
     </script>
