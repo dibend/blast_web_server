@@ -1,3 +1,4 @@
 User-agent: *
 Disallow: /redir
 Allow: /
+Sitemap: https://blastnotifications.com/sitemap.xml

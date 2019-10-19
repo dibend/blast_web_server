@@ -65,7 +65,7 @@ app.get('/track.png', function(request, response) {
 });
 
 app.get('/redir', function(request, response) {
-  if(request.query.url) {
+  if(/nasdaq\.com|currenciesdirect\.com|bittrex\.com|yahoo\.com|whitehouse\.gov|worldstar\.com|metacritic\.com|cnn\.com|cnet\.com|theverge\.com|zerohedge\.com/.test(request.query.url)) {
     var ip = getIP(request);
     console.log(ip + ' opened ' + request.query.url + ' at ' + (new Date().toUTCString()));
     response.redirect(request.query.url);
