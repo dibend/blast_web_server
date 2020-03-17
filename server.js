@@ -65,7 +65,7 @@ app.get('/track.png', function(request, response) {
 });
 
 app.get('/redir', function(request, response) {
-  if(/nasdaq\.com|currenciesdirect\.com|bittrex\.com|yahoo\.com|whitehouse\.gov|worldstarhiphop\.com|metacritic\.com|cnn\.com|cnet\.com|theverge\.com|zerohedge\.com/.test(request.query.url)) {
+  if(/globesold\.com|nasdaq\.com|currenciesdirect\.com|bittrex\.com|yahoo\.com|whitehouse\.gov|worldstarhiphop\.com|metacritic\.com|cnn\.com|cnet\.com|theverge\.com|zerohedge\.com/.test(request.query.url)) {
     var ip = getIP(request);
     console.log(ip + ' opened ' + request.query.url + ' at ' + (new Date().toUTCString()));
     response.redirect(request.query.url);
@@ -1796,6 +1796,54 @@ app.get('/confirm_itunes_paid_apps', function(request, response) {
     response.redirect('/confirmed.html');
     console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
     delete itunes_paid_apps_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+var spinoffs_confirmEmailQuery = {};
+app.get('/signup_spinoffs', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    spinoffs_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: config.from,
+      to: email,
+      subject: 'Confirm Upcoming Spinoffs Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_spinoffs?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(getIP(request) + ' ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_spinoffs', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in spinoffs_confirmEmailQuery) {
+    var email = spinoffs_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO spinoffs SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(getIP(request) + ' ' + email + ' confirmed at ' + (new Date().toUTCString()));
+    delete spinoffs_confirmEmailQuery[secret];
   } else {
     response.status(404);
     response.sendFile(path.join(__dirname+'/public/404.html'));
