@@ -51,6 +51,26 @@ app.use(compression());
 app.use(frameguard({action: 'deny'}));
 app.use(express.static('public', {extensions: ['html']}));
 
+app.get('/view', function(request, response) {
+  fs.readFile('public/view1.html', 'utf8', function(err, data) {
+    if (err) throw err;
+    var titleSplit = data.split('{{ title }}');
+    if(request.query.title) {
+      data = titleSplit[0] + request.query.title + titleSplit[1];
+    } else {
+      data = titleSplit[0] + 'Blast Notifications' + titleSplit[1];
+    }
+    var linkSplit = data.split('{{ link }}');
+    if(request.query.url) {
+      data = linkSplit[0] + 'https://blastnotifications.com/view?url=' + request.query.url + '&title=' + request.query.title + linkSplit[1];
+    } else {
+      data = linkSplit[0] + 'https://blastnotifications.com' + linkSplit[1];
+    }
+    response.send(data); 
+  });
+});
+
+
 function getIP(request) {
   return (request.headers['x-forwarded-for'] ||
     request.connection.remoteAddress ||
