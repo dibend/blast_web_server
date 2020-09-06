@@ -51,7 +51,16 @@ app.use(compression());
 app.use(frameguard({action: 'deny'}));
 app.use(express.static('public', {extensions: ['html']}));
 
+function getIP(request) {
+  return (request.headers['x-forwarded-for'] ||
+    request.connection.remoteAddress ||
+    request.socket.remoteAddress ||
+    request.connection.socket.remoteAddress).split(",")[0];
+}
+
 app.get('/view', function(request, response) {
+  var ip = getIP(request);
+  console.log(ip + ' loaded view ' + request.query.url + ' at ' + (new Date().toUTCString()));
   fs.readFile('public/view1.html', 'utf8', function(err, data) {
     if (err) throw err;
     var titleSplit = data.split('{{ title }}');
@@ -71,12 +80,6 @@ app.get('/view', function(request, response) {
 });
 
 
-function getIP(request) {
-  return (request.headers['x-forwarded-for'] ||
-    request.connection.remoteAddress ||
-    request.socket.remoteAddress ||
-    request.connection.socket.remoteAddress).split(",")[0];
-}
 
 app.get('/track.png', function(request, response) {
   var ip = getIP(request);
