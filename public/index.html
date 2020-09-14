@@ -248,13 +248,14 @@
                 <script>
                 function loopCall() {
                     var viewN = document.getElementById('viewN');
-                    console.log(viewN.style.background);
                     if(viewN.style.background === 'rgb(188, 46, 82)') {
                         viewN.style.background = 'gold';      
-                        viewN.style.color = 'rgb(188, 46, 82)';      
+                        viewN.style.color = 'rgb(188, 46, 82)';
+                        viewN.style.fontSize = "110%";
                     } else {
                         viewN.style.background = 'rgb(188, 46, 82)';      
                         viewN.style.color = 'gold';      
+                        viewN.style.fontSize = "100%";
                     }
                 }
 
