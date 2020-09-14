@@ -60,7 +60,7 @@ function getIP(request) {
 
 app.get('/view', function(request, response) {
   var ip = getIP(request);
-  console.log(ip + ' loaded view ' + request.query.url + ' at ' + (new Date().toUTCString()));
+  console.log(ip + ' loaded view ' + request.query.url + ' from ' + request.query.src + ' at ' + (new Date().toUTCString()));
   fs.readFile('public/view1.html', 'utf8', function(err, data) {
     if (err) throw err;
     var titleSplit = data.split('{{ title }}');
