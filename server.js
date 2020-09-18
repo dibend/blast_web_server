@@ -88,7 +88,7 @@ app.get('/track.png', function(request, response) {
 });
 
 app.get('/redir', function(request, response) {
-  if(/globesold\.com|renaissancecapital\.com|nasdaq\.com|currenciesdirect\.com|bittrex\.com|yahoo\.com|whitehouse\.gov|worldstarhiphop\.com|metacritic\.com|cnn\.com|cnet\.com|theverge\.com|zerohedge\.com/.test(request.query.url)) {
+  if(/globesold\.com|robinhood\.com|renaissancecapital\.com|nasdaq\.com|currenciesdirect\.com|bittrex\.com|yahoo\.com|whitehouse\.gov|worldstarhiphop\.com|metacritic\.com|cnn\.com|cnet\.com|theverge\.com|zerohedge\.com/.test(request.query.url)) {
     var ip = getIP(request);
     console.log(ip + ' opened ' + request.query.url + ' at ' + (new Date().toUTCString()));
     response.redirect(request.query.url);
