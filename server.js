@@ -1873,6 +1873,54 @@ app.get('/confirm_spinoffs', function(request, response) {
   }
 });
 
+var pc_games_confirmEmailQuery = {};
+app.get('/signup_pc_games', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var secret = crypto.randomBytes(64).toString('hex');
+    pc_games_confirmEmailQuery[secret] = email;
+
+    var mailOptions = {
+      from: config.from,
+      to: email,
+      subject: 'Confirm New PC Games Blast Notification',
+      text: 'Visit https://blastnotifications.com/confirm_pc_games?secret=' + secret + ' to verify your subscription!'
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+    console.log(getIP(request) + ' PC Games ' + email + ' confirmation sent at ' + (new Date().toUTCString()));
+    response.redirect('/confirm.html');
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
+app.get('/confirm_pc_games', function(request, response) {
+  var secret = request.query.secret;
+  if(secret in pc_games_confirmEmailQuery) {
+    var email = pc_games_confirmEmailQuery[secret];
+
+    db.query('INSERT IGNORE INTO pc_games SET ?', {email: email}, function (error) {
+      if (error) {
+        console.log(error);
+      }
+    });
+
+    response.redirect('/confirmed.html');
+    console.log(getIP(request) + ' PC Games ' + email + ' confirmed at ' + (new Date().toUTCString()));
+    delete pc_games_confirmEmailQuery[secret];
+  } else {
+    response.status(404);
+    response.sendFile(path.join(__dirname+'/public/404.html'));
+  }
+});
+
 app.get('*', function(request, response) {
   response.redirect('/');
 });
