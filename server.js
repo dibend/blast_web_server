@@ -1921,6 +1921,26 @@ app.get('/confirm_pc_games', function(request, response) {
   }
 });
 
+app.get('/signup_np_real_estate', function(request, response) {
+  var email = request.query.email;
+  if (emailValidator.validate(email)) {
+    var mailOptions = {
+      from: config.from,
+      to: 'david.d@bhhsnj.com',
+      subject: 'New Providence Real Estate Lead',
+      text: email
+    };
+
+    mailer.sendMail(mailOptions, function(err, res) {
+      if(err) {
+        console.log(err);
+      }
+      mailer.close();
+    });
+  };
+  response.redirect('https://np.micheled.com/new-providence-real-estate-market-report.pdf');
+});
+
 app.get('*', function(request, response) {
   response.redirect('/');
 });
