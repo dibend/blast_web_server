@@ -64,6 +64,26 @@
 
 	gtag('config', 'AW-853839455');
 	</script>
+
+    <style type="text/css">
+  .mobileShow {display: none;}
+
+  /* Smartphone Portrait and Landscape */
+  @media only screen
+    and (min-device-width : 320px)
+    and (max-device-width : 480px){ 
+      .mobileShow {display: inline;}
+  }
+ 
+  .mobileHide { display: inline; }
+
+  /* Smartphone Portrait and Landscape */
+  @media only screen
+    and (min-device-width : 320px)
+    and (max-device-width : 480px){
+     .mobileHide { display: none;}
+  }
+  </style>
 </head>
 
 <body id="page-top">
@@ -110,7 +130,8 @@
                     <div class="header-content">
                         <div class="header-content-inner">
                             <h1>Discover First<br><b>Blast Notifications</b> sends you new information as it comes online so you're never late to notice what's important.</h1>
-                            <iframe width="100%" height="315" src="https://www.youtube.com/embed/Awq1e0zT5Zk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            <div class="mobileHide"><iframe width="100%" height="315" src="https://www.youtube.com/embed/Awq1e0zT5Zk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                            <div class="mobileShow"><iframe width="100%" height="700" src="https://www.youtube.com/embed/KDIm14x8jWg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                             <br><br>
                             <a href="notifications.html" class="btn btn-outline btn-xl page-scroll">View Notifications</a>
                             <br><br><a href="#apply"><h2><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></h2></a>
