@@ -87,6 +87,12 @@ app.get('/track.png', function(request, response) {
   response.send();
 });
 
+app.get('/track-wealth-talks.png', function(request, response) {
+  var ip = getIP(request);
+  console.log(ip + ' opened wealth-talks.com at ' + (new Date().toUTCString()) + ' query ' + JSON.stringify(request.query)); 
+  response.send();
+});
+
 app.get('/redir', function(request, response) {
   if(/globesold\.com|robinhood\.com|renaissancecapital\.com|nasdaq\.com|currenciesdirect\.com|bittrex\.com|yahoo\.com|whitehouse\.gov|worldstarhiphop\.com|metacritic\.com|cnn\.com|cnet\.com|theverge\.com|zerohedge\.com|thezenofinvesting\.com/.test(request.query.url)) {
     var ip = getIP(request);
@@ -1923,12 +1929,13 @@ app.get('/confirm_pc_games', function(request, response) {
 
 app.get('/signup_np_real_estate', function(request, response) {
   var email = request.query.email;
+  console.log('New Real Estate Lead: ' + JSON.stringify(request.query));
   if (emailValidator.validate(email)) {
     var mailOptions = {
       from: config.from,
       to: 'david.d@bhhsnj.com',
-      subject: 'New Providence Real Estate Lead',
-      text: email
+      subject: 'Real Estate Lead',
+      text: JSON.stringify(request.query)
     };
 
     mailer.sendMail(mailOptions, function(err, res) {
@@ -1938,7 +1945,7 @@ app.get('/signup_np_real_estate', function(request, response) {
       mailer.close();
     });
   };
-  response.redirect('https://np.micheled.com/new-providence-real-estate-market-report.pdf');
+  response.redirect('https://np.micheled.com/market-report.png');
 });
 
 app.get('*', function(request, response) {
